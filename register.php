@@ -9,9 +9,8 @@
  $error = false;
 
  if (isset($_POST['btn-signup'])) {
-
-  // clean user inputs to prevent sql injections
-  $name = trim($_POST['name']);
+     //排除不合規定之name及passwords
+     $name = trim($_POST['name']);
      $name = strip_tags($name);
      $name = htmlspecialchars($name);
 
@@ -23,147 +22,78 @@
      $pass = strip_tags($pass);
      $pass = htmlspecialchars($pass);
 
-  // basic name validation
-  if (empty($name)) {
-      $error = true;
-      $nameError = "Please enter your full name.";
-  } elseif (strlen($name) < 3) {
-      $error = true;
-      $nameError = "Name must have atleat 3 characters.";
-  } elseif (!preg_match("/^[a-zA-Z ]+$/", $name)) {
-      $error = true;
-      $nameError = "Name must contain alphabets and space.";
-  }
+     if (empty($name)) {
+         $error = true;
+         $nameError = "請輸入名稱";
+     }
 
-  //basic email validation
-  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-      $error = true;
-      $emailError = "Please enter valid email address.";
-  } else {
-      // check email exist or not
-   $query = "SELECT userEmail FROM users WHERE userEmail='$email'";
-      $result = mysql_query($query);
-      $count = mysql_num_rows($result);
-      if ($count!=0) {
-          $error = true;
-          $emailError = "Provided Email is already in use.";
-      }
-  }
-  // password validation
-  if (empty($pass)) {
-      $error = true;
-      $passError = "Please enter password.";
-  } elseif (strlen($pass) < 6) {
-      $error = true;
-      $passError = "Password must have atleast 6 characters.";
-  }
+     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+         $error = true;
+         $emailError = "請輸入正確電子信箱格式.";
+     } else {
+         $query = "SELECT userEmail FROM users WHERE userEmail='$email'";
+         $result = mysql_query($query);
+         $count = mysql_num_rows($result);
+         if ($count!=0) {
+             $error = true;
+             $emailError = "您輸入的電子信箱已被使用";
+         }
+     }
 
-  // password encrypt using SHA256();
-  $password = hash('sha256', $pass);
+     if (empty($pass)) {
+         $error = true;
+         $passError = "請輸入密碼";
+     } elseif (strlen($pass) < 6) {
+         $error = true;
+         $passError = "密碼須至少6個字元以上";
+     }
 
-  // if there's no error, continue to signup
-  if (!$error) {
-      $query = "INSERT INTO users(userName,userEmail,userPass) VALUES('$name','$email','$password')";
-      $res = mysql_query($query);
 
-      if ($res) {
-          $errTyp = "success";
-          $errMSG = "Successfully registered, you may login now";
-          unset($name);
-          unset($email);
-          unset($pass);
-      } else {
-          $errTyp = "danger";
-          $errMSG = "Something went wrong, try again later...";
-      }
-  }
+     $password = hash('sha256', $pass); //秘密加密sha256格式
+
+
+     if (!$error) {
+         $query = "INSERT INTO users(userName,userEmail,userPass) VALUES('$name','$email','$password')";
+         $res = mysql_query($query);
+
+         if ($res) {
+             $errTyp = "success";
+             $errMSG = "註冊成功";
+             unset($name);
+             unset($email);
+             unset($pass);
+         } else {
+             $errTyp = "danger";
+             $errMSG = "註冊失敗";
+         }
+     }
  }
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Coding Cage - Login & Registration System</title>
-<link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"  />
-<link rel="stylesheet" href="style.css" type="text/css" />
+<title>註冊</title>
 </head>
 <body>
-
-<div class="container">
-
- <div id="login-form">
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
-
-     <div class="col-md-12">
-
-         <div class="form-group">
-             <h2 class="">Sign Up.</h2>
-            </div>
-
-         <div class="form-group">
-             <hr />
-            </div>
-
-            <?php
-   if (isset($errMSG)) {
+  <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
+  <h2>註冊</h2>
+  <input type="text" name="name" class="form-control" placeholder="請輸入姓名" maxlength="50" value="" /></br>
+  <?php if (isset($nameError)){echo $nameError.'<br>';} ?>
+  <input type="email" name="email" class="form-control" placeholder="請輸入電子郵件" maxlength="40" value="" /></br>
+  <?php if (isset($emailError)){echo $emailError.'<br>';} ?>
+  <input type="password" name="pass" class="form-control" placeholder="請輸入密碼" maxlength="15" /></br>
+  <?php if (isset($passError)){echo $passError.'<br>';} //如無錯誤，以上error均不會顯示?>
+  <button type="submit" name="btn-signup">註冊</button></br>
+  <a href="index.php">點我回登入頁面</a>
+  <?php
+  if (isset($errMSG)) {
        ?>
-    <div class="form-group">
-             <div class="alert alert-<?php echo ($errTyp=="success") ? "success" : $errTyp; ?>">
-    <span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
-                </div>
-             </div>
-                <?php
-
-   }
-   ?>
-
-            <div class="form-group">
-             <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-             <input type="text" name="name" class="form-control" placeholder="Enter Name" maxlength="50" value="<?php echo $name ?>" />
-                </div>
-                <span class="text-danger"><?php echo $nameError; ?></span>
-            </div>
-
-            <div class="form-group">
-             <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-             <input type="email" name="email" class="form-control" placeholder="Enter Your Email" maxlength="40" value="<?php echo $email ?>" />
-                </div>
-                <span class="text-danger"><?php echo $emailError; ?></span>
-            </div>
-
-            <div class="form-group">
-             <div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-             <input type="password" name="pass" class="form-control" placeholder="Enter Password" maxlength="15" />
-                </div>
-                <span class="text-danger"><?php echo $passError; ?></span>
-            </div>
-
-            <div class="form-group">
-             <hr />
-            </div>
-
-            <div class="form-group">
-             <button type="submit" class="btn btn-block btn-primary" name="btn-signup">Sign Up</button>
-            </div>
-
-            <div class="form-group">
-             <hr />
-            </div>
-
-            <div class="form-group">
-             <a href="index.php">Sign in Here...</a>
-            </div>
-
-        </div>
-
-    </form>
-    </div>
-
-</div>
-
+       <div class="alert alert-<?php echo ($errTyp=="success") ? "success" : $errTyp; ?>">
+       <?php echo $errMSG; ?>
+       <?php
+  }
+  ?>
+  </form>
 </body>
 </html>
 <?php ob_end_flush(); ?>
