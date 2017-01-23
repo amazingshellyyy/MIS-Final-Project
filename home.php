@@ -8,6 +8,7 @@
      header("Location: index.php");
      exit;
  }
+
  //抓取登入之帳戶資料
  $res = mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']);
  $userRow = mysql_fetch_array($res);
@@ -19,9 +20,15 @@
 </head>
 
 <body>
+    首頁<br>
     <?php echo "您好！{$userRow['userName']}同學！"?>
     </br>
-    <a href="logout.php?logout">按我登出</a>
+    <a href="project_home.php">專案首頁</a><br>
+    <a href="todolist.php">待辦清單</a><br>
+    <a href="calandar.php">行事曆</a><br>
+    <a href="personaldata.php">個人設定</a><br>
+    <a href="systemsetting.php">系統設定</a><br>
+    <a href="logout.php?logout">登出</a>
 </body>
 </html>
 <?php ob_end_flush(); ?>

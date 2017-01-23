@@ -60,15 +60,11 @@
 <body>
   <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
       <h2>登入</h2>
-      <?php
-        if (isset($errMSG)) {
-            echo $errMSG;
-        }
-      ?>
       <input type="email" name="email" placeholder="電子郵件" value="<?php echo $email; ?>" maxlength="40" /></br>
       <?php if (isset($emailError)){echo $emailError.'<br>';} ?>
       <input type="password" name="pass" placeholder="密碼" maxlength="15" /></br>
       <?php if (isset($passError)){echo $passError;}?>
+      <?php if (isset($errMSG)) {echo $errMSG;}?>
       </br>
       <button type="submit" name="btn-login">登入</button>
       <a href="register.php">按我註冊</a>
