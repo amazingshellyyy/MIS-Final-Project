@@ -28,6 +28,15 @@
 
      $project_deadline = $_POST['project_deadline'];
 
+     $project_Id = $_POST['project_Id'];
+
+     $project_stage_start_1 = $_POST['$project_stage_start_1'];
+     $project_stage_end_1 = $_POST['$project_stage_end_1'];
+     $project_stage_start_2 = $_POST['$project_stage_start_2'];
+     $project_stage_end_2 = $_POST['$project_stage_end_2'];
+     $project_stage_start_3 = $_POST['$project_stage_start_3'];
+     $project_stage_end_3 = $_POST['$project_stage_end_3'];
+
      if (empty($project_name)) {
          $error = true;
          $project_nameError = "請輸入專案名稱";
@@ -48,7 +57,18 @@
                    VALUES('$project_creatorId','$project_name','$project_class','$project_teacher','$project_creattime','$project_deadline')";
          $res = mysql_query($query);
 
-         if ($res) {
+         $query_stage = "INSERT INTO projects_stage(projectId,project_stageStart,project_stageEnd)
+                         VALUES('$project_Id','$project_stage_start_1','$project_stage_end_1')";
+         $res_stage = mysql_query($query_stage);
+
+         $query_stage = "INSERT INTO projects_stage(projectId,project_stageStart,project_stageEnd)
+                         VALUES('$project_Id','$project_stage_start_2','$project_stage_end_2')";
+         $res_stage = mysql_query($query_stage);
+
+         $query_stage = "INSERT INTO projects_stage(projectId,project_stageStart,project_stageEnd)
+                         VALUES('$project_Id','$project_stage_start_3','$project_stage_end_3')";
+         $res_stage = mysql_query($query_stage);
+         if ($res&&$res_stage ) {
              $errTyp = "success";
              $errMSG = "創建成功";
              unset($project_creatorId);
@@ -57,6 +77,14 @@
              unset($project_teacher);
              unset($project_creattime);
              unset($project_deadline);
+             unset($project_Id);
+             unset($project_stage_start_1);
+             unset($project_stage_end_1);
+             unset($project_stage_start_2);
+             unset($project_stage_end_2);
+             unset($project_stage_start_3);
+             unset($project_stage_end_3);
+
          } else {
              $errTyp = "danger";
              $errMSG = "創建失敗";
@@ -67,6 +95,11 @@
  //抓取登入之帳戶資料
  $res = mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']);
  $userRow = mysql_fetch_array($res);
+
+ $query_projects = mysql_query("SELECT MAX(projectId) FROM projects WHERE projectCreatorId=".$_SESSION['user']);
+ $projectRow = mysql_fetch_array($query_projects);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -79,6 +112,7 @@
     專案設定頁面(目前為創立)<br>
   <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" action="form-handler" autocomplete="off" id="project_create">
     <input type="hidden" name="project_creatorId" value="<?php echo $userRow[0]; ?>">
+    <input type="hidden" name="project_Id" value="<?php echo $projectRow[0]+1; ?>">
     <input type="text" name="project_name" placeholder="請輸入專案名稱" maxlength="40" value="" /></br>
     <?php if (isset($project_nameError)){echo $project_nameError.'<br>';} ?>
     <input type="text" name="project_class" placeholder="請輸入課程(活動)名稱" maxlength="40" value="" /><br>
@@ -86,7 +120,13 @@
     <input type="text" name="project_teacher" placeholder="請輸入指導老師" maxlength="40" value="" /><br>
     <?php if (isset($project_teacherError)){echo $project_teacherError.'<br>';} ?>
     <input type="hidden" name="project_creattime" value="<?php echo date('Y/m/d', time())?>">
-    請輸入到期期限<input type="date" name="project_deadline" maxlength="40" value="" /><br>
+    請輸入到期期限<input type="date" name="project_deadline" maxlength="40" value="" /><br><br>
+    大區段一：<input type="date" name="project_stage_start_1" maxlength="40" value="" />
+    <input type="date" name="project_stage_end_1" maxlength="40" value="" /><br>
+    大區段二：<input type="date" name="project_stage_start_2" maxlength="40" value="" />
+    <input type="date" name="project_stage_end_2" maxlength="40" value="" /><br>
+    大區段三：<input type="date" name="project_stage_start_3" maxlength="40" value="" />
+    <input type="date" name="project_stage_end_3" maxlength="40" value="" /><br>
     <button type="submit" name="btn-project_create">創立</button></br>
     <?php
     if (isset($errMSG)) {
