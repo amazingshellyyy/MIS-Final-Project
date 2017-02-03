@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主機: 127.0.0.1
--- 產生時間： 2017 �?02 ??02 ??13:58
+-- 產生時間： 2017 �?02 ??03 ??13:25
 -- 伺服器版本: 5.6.24
 -- PHP 版本： 5.6.8
 
@@ -30,8 +30,24 @@ CREATE TABLE IF NOT EXISTS `projects_stage` (
   `projects_stageId` int(100) NOT NULL,
   `projectId` int(100) NOT NULL,
   `project_stageStart` date NOT NULL,
-  `project_stageEnd` date NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
+  `project_stageEnd` date NOT NULL,
+  `project_stageName` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
+
+--
+-- 資料表的匯出資料 `projects_stage`
+--
+
+INSERT INTO `projects_stage` (`projects_stageId`, `projectId`, `project_stageStart`, `project_stageEnd`, `project_stageName`) VALUES
+(26, 54, '2017-02-01', '2017-02-03', 'å°'),
+(27, 54, '2017-02-04', '2017-02-06', 'äºŒ'),
+(28, 54, '2017-02-08', '2017-02-16', 'ä¸‰'),
+(29, 55, '2017-02-03', '2017-02-04', 'æ¸¬è©¦'),
+(30, 55, '2017-02-05', '2017-02-06', 'æ¸¬è©¦'),
+(31, 55, '2017-02-07', '2017-02-08', 'æ¸¬è©¦'),
+(32, 56, '2017-02-24', '0000-00-00', 'å¤§'),
+(33, 56, '0000-00-00', '0000-00-00', 'å¤§'),
+(34, 56, '0000-00-00', '0000-00-00', 'å¤§');
 
 --
 -- 已匯出資料表的索引
@@ -51,7 +67,7 @@ ALTER TABLE `projects_stage`
 -- 使用資料表 AUTO_INCREMENT `projects_stage`
 --
 ALTER TABLE `projects_stage`
-  MODIFY `projects_stageId` int(100) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=52;
+  MODIFY `projects_stageId` int(100) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=35;
 --
 -- 已匯出資料表的限制(Constraint)
 --
