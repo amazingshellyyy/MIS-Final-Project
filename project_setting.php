@@ -1,4 +1,5 @@
 <?php
+ //此功能存在一個bug ： 資料庫必須內建好一個project之後才不會有錯誤產生。
  ob_start();
  session_start();
  require_once 'dbconnect.php';
@@ -30,12 +31,26 @@
 
      $project_Id = $_POST['project_Id'];
 
-     $project_stage_start_1 = $_POST['$project_stage_start_1'];
-     $project_stage_end_1 = $_POST['$project_stage_end_1'];
-     $project_stage_start_2 = $_POST['$project_stage_start_2'];
-     $project_stage_end_2 = $_POST['$project_stage_end_2'];
-     $project_stage_start_3 = $_POST['$project_stage_start_3'];
-     $project_stage_end_3 = $_POST['$project_stage_end_3'];
+     $project_stage_name_1 = $_POST['project_stage_name_1'];
+     $project_stage_name_1 = strip_tags($_POST['project_stage_name_1']);
+     $project_stage_name_1 = htmlspecialchars($project_stage_name_1);
+
+     $project_stage_start_1 = $_POST['project_stage_start_1'];
+     $project_stage_end_1 = $_POST['project_stage_end_1'];
+
+     $project_stage_name_2 = $_POST['project_stage_name_2'];
+     $project_stage_name_2 = strip_tags($_POST['project_stage_name_2']);
+     $project_stage_name_2 = htmlspecialchars($project_stage_name_2);
+
+     $project_stage_start_2 = $_POST['project_stage_start_2'];
+     $project_stage_end_2 = $_POST['project_stage_end_2'];
+
+     $project_stage_name_3 = $_POST['project_stage_name_3'];
+     $project_stage_name_3 = strip_tags($_POST['project_stage_name_3']);
+     $project_stage_name_3 = htmlspecialchars($project_stage_name_3);
+
+     $project_stage_start_3 = $_POST['project_stage_start_3'];
+     $project_stage_end_3 = $_POST['project_stage_end_3'];
 
      if (empty($project_name)) {
          $error = true;
@@ -57,17 +72,18 @@
                    VALUES('$project_creatorId','$project_name','$project_class','$project_teacher','$project_creattime','$project_deadline')";
          $res = mysql_query($query);
 
-         $query_stage = "INSERT INTO projects_stage(projectId,project_stageStart,project_stageEnd)
-                         VALUES('$project_Id','$project_stage_start_1','$project_stage_end_1')";
+         $query_stage = "INSERT INTO projects_stage(projectId,project_stageStart,project_stageEnd,project_stageName)
+                         VALUES('$project_Id','$project_stage_start_1','$project_stage_end_1','$project_stage_name_1')";
          $res_stage = mysql_query($query_stage);
 
-         $query_stage = "INSERT INTO projects_stage(projectId,project_stageStart,project_stageEnd)
-                         VALUES('$project_Id','$project_stage_start_2','$project_stage_end_2')";
+         $query_stage = "INSERT INTO projects_stage(projectId,project_stageStart,project_stageEnd,project_stageName)
+                         VALUES('$project_Id','$project_stage_start_2','$project_stage_end_2','$project_stage_name_2')";
          $res_stage = mysql_query($query_stage);
 
-         $query_stage = "INSERT INTO projects_stage(projectId,project_stageStart,project_stageEnd)
-                         VALUES('$project_Id','$project_stage_start_3','$project_stage_end_3')";
+         $query_stage = "INSERT INTO projects_stage(projectId,project_stageStart,project_stageEnd,project_stageName)
+                         VALUES('$project_Id','$project_stage_start_3','$project_stage_end_3','$project_stage_name_3')";
          $res_stage = mysql_query($query_stage);
+
          if ($res&&$res_stage ) {
              $errTyp = "success";
              $errMSG = "創建成功";
@@ -78,6 +94,9 @@
              unset($project_creattime);
              unset($project_deadline);
              unset($project_Id);
+             unset($project_stage_name_1);
+             unset($project_stage_name_2);
+             unset($project_stage_name_3);
              unset($project_stage_start_1);
              unset($project_stage_end_1);
              unset($project_stage_start_2);
@@ -98,6 +117,7 @@
 
  $query_projects = mysql_query("SELECT MAX(projectId) FROM projects WHERE projectCreatorId=".$_SESSION['user']);
  $projectRow = mysql_fetch_array($query_projects);
+
 
 
 ?>
@@ -121,11 +141,17 @@
     <?php if (isset($project_teacherError)){echo $project_teacherError.'<br>';} ?>
     <input type="hidden" name="project_creattime" value="<?php echo date('Y/m/d', time())?>">
     請輸入到期期限<input type="date" name="project_deadline" maxlength="40" value="" /><br><br>
-    大區段一：<input type="date" name="project_stage_start_1" maxlength="40" value="" />
+    大區段一：
+    <input type="text" name="project_stage_name_1" placeholder="請輸入區段名稱" maxlength="40" value="" />
+    <input type="date" name="project_stage_start_1" maxlength="40" value="" />
     <input type="date" name="project_stage_end_1" maxlength="40" value="" /><br>
-    大區段二：<input type="date" name="project_stage_start_2" maxlength="40" value="" />
+    大區段二：
+    <input type="text" name="project_stage_name_2" placeholder="請輸入區段名稱" maxlength="40" value="" />
+    <input type="date" name="project_stage_start_2" maxlength="40" value="" />
     <input type="date" name="project_stage_end_2" maxlength="40" value="" /><br>
-    大區段三：<input type="date" name="project_stage_start_3" maxlength="40" value="" />
+    大區段三：
+    <input type="text" name="project_stage_name_3" placeholder="請輸入區段名稱" maxlength="40" value="" />
+    <input type="date" name="project_stage_start_3" maxlength="40" value="" />
     <input type="date" name="project_stage_end_3" maxlength="40" value="" /><br>
     <button type="submit" name="btn-project_create">創立</button></br>
     <?php
