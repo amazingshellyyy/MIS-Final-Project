@@ -14,9 +14,17 @@
  $userRow = mysql_fetch_array($res);
 
  //抓取專案名稱資料
- $res = mysql_query("SELECT projectName FROM projects WHERE projectCreatorId=".$_SESSION['user']);
- $projectRow = mysql_fetch_array($res);
- $projectRow = array_values($projectRow);//取出值，因為鍵值有問題
+ $res = mysql_query("SELECT projectName FROM projects WHERE projectCreatorId=".$userRow[0]);
+ $projectNameRow = array();
+ for ($i = 0; $i < mysql_num_rows($res); $i++) {
+   $projectNameRow[] = mysql_result($res,$i,0);
+ }
+
+ $res = mysql_query("SELECT projectId FROM projects WHERE projectCreatorId=".$userRow[0]);
+ $projectIdRow = array();
+ for ($i = 0; $i < mysql_num_rows($res); $i++) {
+   $projectIdRow[] = mysql_result($res,$i,0);
+ }
 
 ?>
 <!DOCTYPE html>
@@ -28,14 +36,14 @@
 <body>
     首頁<br>
     <?php echo "您好！{$userRow['userName']}同學！"?>
-    </br>
-    <a href="project_home.php">專案首頁</a><br>
+    <br><br>
+    <a>專案列表</a><br>
     <?php
-      for($i = 0; $i < count($projectRow); $i++){
-        echo "$projectRow[$i]<br>";
+      for($i = 0; $i < count($projectNameRow); $i++){
+         echo "<a href=\"project_home.php?$id=$projectIdRow[$i]\">$projectNameRow[$i]</a><br>";
       }
-      unset($projectRow);
     ?>
+    <br>
     <a href="todolist.php">待辦清單</a><br>
     <a href="calandar.php">行事曆</a><br>
     <a href="personaldata.php">個人設定</a><br>
