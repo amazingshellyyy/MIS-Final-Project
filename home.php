@@ -40,10 +40,11 @@
     <a>專案列表</a><br>
     <?php
       for($i = 0; $i < count($projectNameRow); $i++){
-         echo "<a href=\"project_home.php?$id=$projectIdRow[$i]\">$projectNameRow[$i]</a><br>";
+         echo "<a href=\"project_home.php?id=$projectIdRow[$i]\">$projectNameRow[$i]</a><br>";
       }
     ?>
     <br>
+    <a href="project_creating.php">創建專案</a><br>
     <a href="todolist.php">待辦清單</a><br>
     <a href="calandar.php">行事曆</a><br>
     <a href="personaldata.php">個人設定</a><br>
