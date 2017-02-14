@@ -189,7 +189,7 @@
     }
     ?>
   </form>
-    <a href="home.php">回首頁</a>
+    <a href="project_home.php?id=<?php echo $_GET['id']; ?>">回專案首頁</a>
   </body>
 </html>
 

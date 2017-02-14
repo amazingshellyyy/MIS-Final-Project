@@ -26,6 +26,28 @@
    $projectIdRow[] = mysql_result($res,$i,0);
  }
 
+
+ $res = mysql_query("SELECT projectName FROM projects WHERE (projectMembersId LIKE '%$userRow[0]%')");
+ $projectNameRow_members = array();
+ for ($i = 0; $i < mysql_num_rows($res); $i++) {
+   $projectNameRow_members[] = mysql_result($res,$i,0);
+ }
+
+ $res = mysql_query("SELECT projectId FROM projects WHERE (projectMembersId LIKE '%$userRow[0]%')");
+ $projectIdRow_members = array();
+ echo $projectIdRow_members[0];
+ for($i = 0; $i < mysql_num_rows($res); $i++){
+   $projectIdRow_members[] = mysql_result($res,$i,0);
+ }
+
+//切割member，存為陣列
+ /*$size = count($projectIdRow_members);
+ for($i = 0; $i < $size; $i++){
+   $p = explode(',',$projectIdRow_members[$i]);
+   array_splice($projectIdRow_members,$i,1,$p);
+ }*/
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,6 +63,9 @@
     <?php
       for($i = 0; $i < count($projectNameRow); $i++){
          echo "<a href=\"project_home.php?id=$projectIdRow[$i]\">$projectNameRow[$i]</a><br>";
+      }
+      for($i = 0; $i < count($projectNameRow_members); $i++){
+         echo "<a href=\"project_home.php?id=$projectIdRow_members[$i]\">$projectNameRow_members[$i]</a><br>";
       }
     ?>
     <br>
