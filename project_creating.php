@@ -52,6 +52,9 @@
      $project_stage_start_3 = $_POST['project_stage_start_3'];
      $project_stage_end_3 = $_POST['project_stage_end_3'];
 
+     $project_member = $_POST['project_member'];
+     $project_member = trim($project_member);
+
      if (empty($project_name)) {
          $error = true;
          $project_nameError = "請輸入專案名稱";
@@ -68,8 +71,8 @@
      }
 
      if (!$error) {
-         $query = "INSERT INTO projects(projectCreatorId,projectName,projectClassName,projectTeacher,projectCreatetime,projectDeadline)
-                   VALUES('$project_creatorId','$project_name','$project_class','$project_teacher','$project_creattime','$project_deadline')";
+         $query = "INSERT INTO projects(projectCreatorId,projectMembersId,projectName,projectClassName,projectTeacher,projectCreatetime,projectDeadline)
+                   VALUES('$project_creatorId','$project_member','$project_name','$project_class','$project_teacher','$project_creattime','$project_deadline')";
          $res = mysql_query($query);
 
          $query_stage = "INSERT INTO projects_stage(projectId,project_stageStart,project_stageEnd,project_stageName)
@@ -137,6 +140,7 @@
     <?php if (isset($project_nameError)){echo $project_nameError.'<br>';} ?>
     <input type="text" name="project_class" placeholder="請輸入課程(活動)名稱" maxlength="40" value="" /><br>
     <?php if (isset($project_classError)){echo $project_classError.'<br>';} ?>
+    <input type="text" name="project_member" placeholder="請輸入組員id,例如 : 1,5,10" value="" /><br>
     <input type="text" name="project_teacher" placeholder="請輸入指導老師" maxlength="40" value="" /><br>
     <?php if (isset($project_teacherError)){echo $project_teacherError.'<br>';} ?>
     <input type="hidden" name="project_creattime" value="<?php echo date('Y/m/d', time())?>">
